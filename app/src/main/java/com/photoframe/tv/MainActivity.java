@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.SystemClock;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
@@ -12,12 +11,10 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
     private WebView web;
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private long lastBack;
 
     /** Lets the page call AndroidApp.exit() */
     public class Bridge {
@@ -64,7 +61,7 @@ public class MainActivity extends Activity {
         if (hasFocus) immersive();
     }
 
-    /** Back: the page closes its settings or asks to press again; if the page isn't loaded, handle it here. */
+    /** Back: the page closes its settings or exits; if the page isn't loaded, exit here. */
     @Override
     public void onBackPressed() {
         web.evaluateJavascript("(typeof onBack==='function')?(onBack(),1):0", v -> {
@@ -73,13 +70,7 @@ public class MainActivity extends Activity {
     }
 
     private void nativeBack() {
-        long now = SystemClock.uptimeMillis();
-        if (now - lastBack < 3000) {
-            finish();
-        } else {
-            lastBack = now;
-            Toast.makeText(this, "Press Back again to exit", Toast.LENGTH_SHORT).show();
-        }
+        finish();   // page not loaded (server unreachable): Back simply exits
     }
 
     @Override
