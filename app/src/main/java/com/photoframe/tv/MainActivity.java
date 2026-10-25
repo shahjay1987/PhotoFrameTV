@@ -22,6 +22,11 @@ public class MainActivity extends Activity {
         public void exit() {
             runOnUiThread(MainActivity.this::finish);
         }
+
+        @JavascriptInterface
+        public void media(String which) {
+            Web.mediaKey(MainActivity.this, which);
+        }
     }
 
     @Override
