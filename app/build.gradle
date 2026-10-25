@@ -1,4 +1,8 @@
 plugins { id 'com.android.application' }
+
+// Every GitHub build gets a higher version number automatically (run number), so a new APK always counts as an update.
+def runNumber = (System.getenv('GITHUB_RUN_NUMBER') ?: '1').toInteger()
+
 android {
     namespace 'com.photoframe.tv'
     compileSdk 34
@@ -6,8 +10,22 @@ android {
         applicationId 'com.photoframe.tv'
         minSdk 23
         targetSdk 34
-        versionCode 1
-        versionName '1.0'
+        versionCode runNumber
+        versionName "1.${runNumber}"
+    }
+    // One fixed signing key kept in the repository. Android only lets an app be updated by an APK signed with the SAME key;
+    // GitHub's own debug key is different on every build, which is why the old app had to be uninstalled first.
+    signingConfigs {
+        frame {
+            storeFile file('photoframe.keystore')
+            storePassword 'photoframe'
+            keyAlias 'photoframe'
+            keyPassword 'photoframe'
+            storeType 'pkcs12'
+        }
+    }
+    buildTypes {
+        debug { signingConfig signingConfigs.frame }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
