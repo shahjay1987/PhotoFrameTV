@@ -9,7 +9,7 @@ import android.webkit.WebView;
 
 /**
  * Screensaver version. Interactive: remote keys go to the page (Left/Right = previous/next photo,
- * OK = settings). Press Back twice to leave; the Home button also leaves.
+ * OK = settings). Back leaves; the Home button also leaves.
  */
 public class PhotoDream extends DreamService {
     private WebView web;
@@ -20,6 +20,11 @@ public class PhotoDream extends DreamService {
         @JavascriptInterface
         public void exit() {
             ui.post(PhotoDream.this::finish);
+        }
+
+        @JavascriptInterface
+        public void media(String which) {
+            Web.mediaKey(PhotoDream.this, which);
         }
     }
 
