@@ -24,6 +24,7 @@ final class Web {
 
     @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     static void setup(WebView w, Object bridge) {
+        WebView.setWebContentsDebuggingEnabled(true);   // lets you inspect and measure the page from a PC (chrome://inspect, over adb); no effect otherwise
         WebSettings s = w.getSettings();
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
